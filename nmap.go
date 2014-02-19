@@ -1,4 +1,4 @@
-/* Parses Nmap XML data stringo a similary formed struct. */
+/* Parses Nmap XML data into a similary formed struct. */
 package gonmap
 
 import (
