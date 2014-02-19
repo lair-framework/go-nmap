@@ -55,7 +55,7 @@ type Host struct {
 	Os           Os           `xml:"os"`
 	Distance     Distance     `xml:"distance"`
 	Uptime       Uptime       `xml:"updtime"`
-	TcpSequence  TcpSequence  `xml:"tcpsequnce"`
+	TcpSequence  TcpSequence  `xml:"tcpsequence"`
 	IpIdSequence IpIdSequence `xml:"ipidsequence"`
 	Trace        Trace        `xml:"trace"`
 }
