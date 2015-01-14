@@ -1,5 +1,5 @@
-/*Package gonmap parses Nmap XML data into a similary formed struct.*/
-package gonmap
+/*Package nmap parses Nmap XML data into a similary formed struct.*/
+package nmap
 
 import (
 	"encoding/xml"
