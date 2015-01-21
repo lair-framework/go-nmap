@@ -64,7 +64,7 @@ type Host struct {
 	Distance     Distance     `xml:"distance"`
 	Uptime       Uptime       `xml:"updtime"`
 	TcpSequence  TcpSequence  `xml:"tcpsequence"`
-	IPIDSequence IPIDSequence `xml:"ipidsequence"`
+	IPIdSequence IPIdSequence `xml:"ipidsequence"`
 	Trace        Trace        `xml:"trace"`
 }
 
@@ -97,7 +97,7 @@ type Smurf struct {
 // Port contains all the information about a scanned port.
 type Port struct {
 	Protocol string   `xml:"protocol,attr"`
-	PortID   string   `xml:"portid,attr"`
+	PortId   string   `xml:"portid,attr"`
 	State    State    `xml:"state"`
 	Owner    Owner    `xml:"owner"`
 	Service  Service  `xml:"service"`
@@ -140,7 +140,7 @@ type Service struct {
 
 // Script contains information from Nmap Scripting Engine.
 type Script struct {
-	ID     string `xml:"id,attr"`
+	Id     string `xml:"id,attr"`
 	Output string `xml:"output,attr"`
 }
 
@@ -155,7 +155,7 @@ type Os struct {
 type PortUsed struct {
 	State  string `xml:"state,attr"`
 	Proto  string `xml:"proto,attr"`
-	PortID string `xml:"portid,attr"`
+	PortId string `xml:"portid,attr"`
 }
 
 // OsMatch contains detailed information regarding a Os fingerprint.
@@ -198,8 +198,8 @@ type TcpSequence struct {
 	Values     string `xml:"vaules,attr"`
 }
 
-// IPIDSequence contains information regarding the detected ip sequence.
-type IPIDSequence struct {
+// IPIdSequence contains information regarding the detected ip sequence.
+type IPIdSequence struct {
 	Class  string `xml:"class,attr"`
 	Values string `xml:"values,attr"`
 }
