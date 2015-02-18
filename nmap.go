@@ -71,7 +71,7 @@ type Host struct {
 // Status is the host's status. Up, down, etc.
 type Status struct {
 	State     string `xml:"state,attr"`
-	Reason    string `xml:"conn-refused,attr"`
+	Reason    string `xml:"reason,attr"`
 	ReasonTTL string `xml:"reason_ttl,attr"`
 }
 
