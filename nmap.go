@@ -56,7 +56,7 @@ type Host struct {
 	EndTime      string       `xml:"endtime,attr"`
 	Comment      string       `xml:"comment,attr"`
 	Status       Status       `xml:"status"`
-	Address      []Address    `xml:"address"`
+	Addresses    []Address    `xml:"address"`
 	Hostnames    []Hostname   `xml:"hostnames>hostname"`
 	Smurf        []Smurf      `xml:"smurf"`
 	Ports        []Port       `xml:"ports>port"`
@@ -97,7 +97,7 @@ type Smurf struct {
 // Port contains all the information about a scanned port.
 type Port struct {
 	Protocol string   `xml:"protocol,attr"`
-	PortId   string   `xml:"portid,attr"`
+	PortId   int      `xml:"portid,attr"`
 	State    State    `xml:"state"`
 	Owner    Owner    `xml:"owner"`
 	Service  Service  `xml:"service"`
