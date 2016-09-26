@@ -7,246 +7,246 @@ import (
 
 // NmapRun is contains all the data for a single nmap scan.
 type NmapRun struct {
-	Scanner          string    `xml:"scanner,attr"`
-	Args             string    `xml:"args,attr"`
-	Start            string    `xml:"start,attr"`
-	StartStr         string    `xml:"startstr,attr"`
-	Version          string    `xml:"version,attr"`
-	ProfileName      string    `xml:"profile_name,attr"`
-	XMLOutputVersion string    `xml:"xmloutputversion,attr"`
-	ScanInfo         ScanInfo  `xml:"scaninfo"`
-	Verbose          Verbose   `xml:"verbose"`
-	Debugging        Debugging `xml:"debugging"`
-	Hosts            []Host    `xml:"host"`
-	Targets          []Target  `xml:"target"`
-	RunStats         RunStats  `xml:"runstats"`
+	Scanner          string    `xml:"scanner,attr" json:"scanner"`
+	Args             string    `xml:"args,attr" json:"args"`
+	Start            string    `xml:"start,attr" json:"start"`
+	StartStr         string    `xml:"startstr,attr" json:"startstr"`
+	Version          string    `xml:"version,attr" json:"version"`
+	ProfileName      string    `xml:"profile_name,attr" json:"profile_name"`
+	XMLOutputVersion string    `xml:"xmloutputversion,attr" json:"xmloutputversion"`
+	ScanInfo         ScanInfo  `xml:"scaninfo" json:"scaninfo"`
+	Verbose          Verbose   `xml:"verbose" json:"verbose"`
+	Debugging        Debugging `xml:"debugging" json:"debugging"`
+	Hosts            []Host    `xml:"host" json:"hosts"`
+	Targets          []Target  `xml:"target" json:"targets"`
+	RunStats         RunStats  `xml:"runstats" json:"runstats"`
 }
 
 // ScanInfo contains informational regarding how the scan
 // was run.
 type ScanInfo struct {
-	Type        string `xml:"type,attr"`
-	Protocol    string `xml:"protocol,attr"`
-	NumServices string `xml:"numservices,attr"`
-	Services    string `xml:"services,attr"`
-	ScanFlags   string `xml:"scanflags,attr"`
+	Type        string `xml:"type,attr" json:"type"`
+	Protocol    string `xml:"protocol,attr" json:"protocol"`
+	NumServices string `xml:"numservices,attr" json:"numservices"`
+	Services    string `xml:"services,attr" json:"services"`
+	ScanFlags   string `xml:"scanflags,attr" json:"scanflags"`
 }
 
 // Verbose contains the verbosity level for the Nmap scan.
 type Verbose struct {
-	Level string `xml:"level,attr"`
+	Level string `xml:"level,attr" json:"level"`
 }
 
 // Debugging contains the debugging level for the Nmap scan.
 type Debugging struct {
-	Level string `xml:"level,attr"`
+	Level string `xml:"level,attr" json:"level"`
 }
 
 // Target is found in the Nmap xml spec. I have no idea what it
 // actually is.
 type Target struct {
-	Specification string `xml:"specification,attr"`
-	Status        string `xml:"status,attr"`
-	Reason        string `xml:"reason,attr"`
+	Specification string `xml:"specification,attr" json:"specification"`
+	Status        string `xml:"status,attr" json:"status"`
+	Reason        string `xml:"reason,attr" json:"reason"`
 }
 
 // Host contains all information about a single host.
 type Host struct {
-	StartTime    string       `xml:"starttime,attr"`
-	EndTime      string       `xml:"endtime,attr"`
-	Comment      string       `xml:"comment,attr"`
-	Status       Status       `xml:"status"`
-	Addresses    []Address    `xml:"address"`
-	Hostnames    []Hostname   `xml:"hostnames>hostname"`
-	Smurf        []Smurf      `xml:"smurf"`
-	Ports        []Port       `xml:"ports>port"`
-	Os           Os           `xml:"os"`
-	Distance     Distance     `xml:"distance"`
-	Uptime       Uptime       `xml:"updtime"`
-	TcpSequence  TcpSequence  `xml:"tcpsequence"`
-	IPIdSequence IPIdSequence `xml:"ipidsequence"`
-	Trace        Trace        `xml:"trace"`
+	StartTime    string       `xml:"starttime,attr" json:"starttime"`
+	EndTime      string       `xml:"endtime,attr" json:"endtime"`
+	Comment      string       `xml:"comment,attr" json:"comment"`
+	Status       Status       `xml:"status" json:"status"`
+	Addresses    []Address    `xml:"address" json:"addresses"`
+	Hostnames    []Hostname   `xml:"hostnames>hostname" json:"hostnames"`
+	Smurf        []Smurf      `xml:"smurf" json:"smurf"`
+	Ports        []Port       `xml:"ports>port" json:"ports"`
+	Os           Os           `xml:"os" json:"os"`
+	Distance     Distance     `xml:"distance" json:"distance"`
+	Uptime       Uptime       `xml:"updtime" json:"updtime"`
+	TcpSequence  TcpSequence  `xml:"tcpsequence" json:"tcpsequence"`
+	IPIdSequence IPIdSequence `xml:"ipidsequence" json:"ipidsequence"`
+	Trace        Trace        `xml:"trace" json:"trace"`
 }
 
 // Status is the host's status. Up, down, etc.
 type Status struct {
-	State     string `xml:"state,attr"`
-	Reason    string `xml:"reason,attr"`
-	ReasonTTL string `xml:"reason_ttl,attr"`
+	State     string `xml:"state,attr" json:"state"`
+	Reason    string `xml:"reason,attr" json:"reason"`
+	ReasonTTL string `xml:"reason_ttl,attr" json:"reason_ttl"`
 }
 
 // Address contains a IPv4 or IPv6 address for a Host.
 type Address struct {
-	Addr     string `xml:"addr,attr"`
-	AddrType string `xml:"addrtype,attr"`
-	Vendor   string `xml:"vendor,attr"`
+	Addr     string `xml:"addr,attr" json:"addr"`
+	AddrType string `xml:"addrtype,attr" json:"addrtype"`
+	Vendor   string `xml:"vendor,attr" json:"vendor"`
 }
 
 // Hostname is a single name for a Host.
 type Hostname struct {
-	Name string `xml:"name,attr"`
-	Type string `xml:"type,attr"`
+	Name string `xml:"name,attr" json:"name"`
+	Type string `xml:"type,attr" json:"type"`
 }
 
 // Smurf contains repsonses from a smurf attack. I think.
 // Smurf attacks, really?
 type Smurf struct {
-	Responses string `xml:"responses,attr"`
+	Responses string `xml:"responses,attr" json:"responses"`
 }
 
 // Port contains all the information about a scanned port.
 type Port struct {
-	Protocol string   `xml:"protocol,attr"`
-	PortId   int      `xml:"portid,attr"`
-	State    State    `xml:"state"`
-	Owner    Owner    `xml:"owner"`
-	Service  Service  `xml:"service"`
-	Scripts  []Script `xml:"script"`
+	Protocol string   `xml:"protocol,attr" json:"protocol"`
+	PortId   int      `xml:"portid,attr" json:"portid"`
+	State    State    `xml:"state" json:"state"`
+	Owner    Owner    `xml:"owner" json:"owner"`
+	Service  Service  `xml:"service" json:"service"`
+	Scripts  []Script `xml:"script" json:"scripts"`
 }
 
 // State contains information about a given ports
 // status. State will be open, closed, etc.
 type State struct {
-	State     string `xml:"state,attr"`
-	Reason    string `xml:"reason,attr"`
-	ReasonTTL string `xml:"reason_ttl,attr"`
-	ReasonIP  string `xml:"reason_ip,attr"`
+	State     string `xml:"state,attr" json:"state"`
+	Reason    string `xml:"reason,attr" json:"reason"`
+	ReasonTTL string `xml:"reason_ttl,attr" json:"reason_ttl"`
+	ReasonIP  string `xml:"reason_ip,attr" json:"reason_ip"`
 }
 
 // Owner contains the name of Port.Owner.
 type Owner struct {
-	Name string `xml:"name,attr"`
+	Name string `xml:"name,attr" json:"name"`
 }
 
 // Service contains detailed information about a Port's
 // service details.
 type Service struct {
-	Name       string `xml:"name,attr"`
-	Conf       string `xml:"conf,attr"`
-	Method     string `xml:"method,attr"`
-	Version    string `xml:"version,attr"`
-	Product    string `xml:"product,attr"`
-	ExtraInfo  string `xml:"extrainfo,attr"`
-	Tunnel     string `xml:"tunnel,attr"`
-	Proto      string `xml:"proto,attr"`
-	Rpcnum     string `xml:"rpcnum,attr"`
-	Lowver     string `xml:"lowver,attr"`
-	Highver    string `xml:"hiver,attr"`
-	Hostname   string `xml:"hostname,attr"`
-	OsType     string `xml:"ostype,attr"`
-	DeviceType string `xml:"devicetype,attr"`
-	ServiceFp  string `xml:"servicefp,attr"`
+	Name       string `xml:"name,attr" json:"name"`
+	Conf       string `xml:"conf,attr" json:"conf"`
+	Method     string `xml:"method,attr" json:"method"`
+	Version    string `xml:"version,attr" json:"version"`
+	Product    string `xml:"product,attr" json:"product"`
+	ExtraInfo  string `xml:"extrainfo,attr" json:"extrainfo"`
+	Tunnel     string `xml:"tunnel,attr" json:"tunnel"`
+	Proto      string `xml:"proto,attr" json:"proto"`
+	Rpcnum     string `xml:"rpcnum,attr" json:"rpcnum"`
+	Lowver     string `xml:"lowver,attr" json:"lowver"`
+	Highver    string `xml:"hiver,attr" json:"hiver"`
+	Hostname   string `xml:"hostname,attr" json:"hostname"`
+	OsType     string `xml:"ostype,attr" json:"ostype"`
+	DeviceType string `xml:"devicetype,attr" json:"devicetype"`
+	ServiceFp  string `xml:"servicefp,attr" json:"servicefp"`
 }
 
 // Script contains information from Nmap Scripting Engine.
 type Script struct {
-	Id     string `xml:"id,attr"`
-	Output string `xml:"output,attr"`
+	Id     string `xml:"id,attr" json:"id"`
+	Output string `xml:"output,attr" json:"output"`
 }
 
 // Os contains the fingerprinted operating system for a Host.
 type Os struct {
-	PortUsed      []PortUsed      `xml:"portused"`
-	OsMatch       []OsMatch       `xml:"osmatch"`
-	OsFingerprint []OsFingerprint `xml:"osfingerprint"`
+	PortUsed      []PortUsed      `xml:"portused" json:"portsused"`
+	OsMatch       []OsMatch       `xml:"osmatch" json:"osmatches"`
+	OsFingerprint []OsFingerprint `xml:"osfingerprint" json:"osfingerprints"`
 }
 
 // PortUsed is the port used to fingerprint a Os.
 type PortUsed struct {
-	State  string `xml:"state,attr"`
-	Proto  string `xml:"proto,attr"`
-	PortId string `xml:"portid,attr"`
+	State  string `xml:"state,attr" json:"state"`
+	Proto  string `xml:"proto,attr" json:"proto"`
+	PortId string `xml:"portid,attr" json:"portid"`
 }
 
 // OsMatch contains detailed information regarding a Os fingerprint.
 type OsMatch struct {
-	Name     string    `xml:"name,attr"`
-	Accuracy string    `xml:"accuracy,attr"`
-	Line     string    `xml:"line,attr"`
-	OsClass  []OsClass `xml:"osclass"`
+	Name     string    `xml:"name,attr" json:"name"`
+	Accuracy string    `xml:"accuracy,attr" json:"accuracy"`
+	Line     string    `xml:"line,attr" json:"line"`
+	OsClass  []OsClass `xml:"osclass" json:"osclasses"`
 }
 
 // OsClass contains vendor information for an Os.
 type OsClass struct {
-	Vendor   string `xml:"vendor,attr"`
+	Vendor   string `xml:"vendor,attr" json:"vendor"`
 	OsGen    string `xml"osgen,attr"`
-	Type     string `xml:"type,attr"`
-	Accuracy string `xml:"accurancy,attr"`
-	OsFamily string `xml:"osfamily,attr"`
+	Type     string `xml:"type,attr" json:"type"`
+	Accuracy string `xml:"accurancy,attr" json:"accurancy"`
+	OsFamily string `xml:"osfamily,attr" json:"osfamily"`
 }
 
 // OsFingerprint is the actual fingerprint string.
 type OsFingerprint struct {
-	Fingerprint string `xml:"fingerprint,attr"`
+	Fingerprint string `xml:"fingerprint,attr" json:"fingerprint"`
 }
 
 // Distance is the amount of hops to a particular host.
 type Distance struct {
-	Value string `xml:"value,attr"`
+	Value string `xml:"value,attr" json:"value"`
 }
 
 // Uptime is the amount of time the host has been up.
 type Uptime struct {
-	Seconds  string `xml:"seconds,attr"`
-	Lastboot string `xml:"lastboot,attr"`
+	Seconds  string `xml:"seconds,attr" json:"seconds"`
+	Lastboot string `xml:"lastboot,attr" json:"lastboot"`
 }
 
 // TcpSequence contains information regarding the detected tcp sequence.
 type TcpSequence struct {
-	Index      string `xml:"index,attr"`
-	Difficulty string `xml:"difficulty,attr"`
-	Values     string `xml:"vaules,attr"`
+	Index      string `xml:"index,attr" json:"index"`
+	Difficulty string `xml:"difficulty,attr" json:"difficulty"`
+	Values     string `xml:"vaules,attr" json:"vaules"`
 }
 
 // IPIdSequence contains information regarding the detected ip sequence.
 type IPIdSequence struct {
-	Class  string `xml:"class,attr"`
-	Values string `xml:"values,attr"`
+	Class  string `xml:"class,attr" json:"class"`
+	Values string `xml:"values,attr" json:"values"`
 }
 
 // Times contains time statistics for an Nmap scan.
 type Times struct {
-	Srtt   string `xml:"srtt,attr"`
-	Rttvar string `xml:"rttvar,attr"`
-	To     string `xml:"to,attr"`
+	Srtt   string `xml:"srtt,attr" json:"srtt"`
+	Rttvar string `xml:"rttvar,attr" json:"rttvar"`
+	To     string `xml:"to,attr" json:"to"`
 }
 
 // Trace contains the hops to a Host.
 type Trace struct {
-	Hops []Hop `xml:"hop"`
+	Hops []Hop `xml:"hop" json:"hops"`
 }
 
 // Hop is a ip hop to a Host.
 type Hop struct {
-	TTL    string `xml:"ttl,attr"`
-	Rtt    string `xml:"rtt,attr"`
-	IPAddr string `xml:"ipaddr,attr"`
-	Host   string `xml:"host,attr"`
+	TTL    string `xml:"ttl,attr" json:"ttl"`
+	Rtt    string `xml:"rtt,attr" json:"rtt"`
+	IPAddr string `xml:"ipaddr,attr" json:"ipaddr"`
+	Host   string `xml:"host,attr" json:"host"`
 }
 
 // RunStats contains statistics for a
 // finished Nmap scan.
 type RunStats struct {
-	Finished Finished `xml:"finished"`
-	Hosts    Stats    `xml:"hosts"`
+	Finished Finished `xml:"finished" json:"finished"`
+	Hosts    Stats    `xml:"hosts" json:"hosts"`
 }
 
 // Finished contains detailed statistics regarding
 // a finished Nmap scan.
 type Finished struct {
-	Time     string `xml:"time,attr"`
-	TimeStr  string `xml:"timestr,attr"`
-	Elapsed  string `xml:"elapsed,attr"`
-	Summary  string `xml:"summary,attr"`
-	Exit     string `xml:"exit,attr"`
-	ErrorMsg string `xml:"errormsg,attr"`
+	Time     string `xml:"time,attr" json:"time"`
+	TimeStr  string `xml:"timestr,attr" json:"timestr"`
+	Elapsed  string `xml:"elapsed,attr" json:"elapsed"`
+	Summary  string `xml:"summary,attr" json:"summary"`
+	Exit     string `xml:"exit,attr" json:"exit"`
+	ErrorMsg string `xml:"errormsg,attr" json:"errormsg"`
 }
 
 // Stats contains the amount of up and down hosts and the total count.
 type Stats struct {
-	Up    string `xml:"up,attr"`
-	Down  string `xml:"down,attr"`
-	Total string `xml:"total,attr"`
+	Up    string `xml:"up,attr" json:"up"`
+	Down  string `xml:"down,attr" json:"down"`
+	Total string `xml:"total,attr" json:"total"`
 }
 
 // Parse takes a byte array of nmap xml data and unmarshals it into an
