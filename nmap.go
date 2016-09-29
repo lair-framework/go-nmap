@@ -3,13 +3,51 @@ package nmap
 
 import (
 	"encoding/xml"
+	"fmt"
+	"strconv"
+	"time"
 )
+
+type Timestamp struct {
+	time.Time
+}
+
+// str2time converts a string containing a UNIX timestamp to to a time.Time.
+func (t *Timestamp) str2time(s string) (err error) {
+	ts, err := strconv.Atoi(string(s))
+	if err != nil {
+		return
+	}
+	t.Time = time.Unix(int64(ts), 0)
+	return
+}
+
+// time2str formats the time.Time value as a UNIX timestamp string.
+func (t *Timestamp) time2str() string {
+	return fmt.Sprint(t.Time.Unix())
+}
+
+func (t *Timestamp) MarshalJSON() ([]byte, error) {
+	return []byte(t.time2str()), nil
+}
+
+func (t *Timestamp) UnmarshalJSON(b []byte) error {
+	return t.str2time(string(b))
+}
+
+func (t *Timestamp) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
+	return xml.Attr{Name: name, Value: t.time2str()}, nil
+}
+
+func (t *Timestamp) UnmarshalXMLAttr(attr xml.Attr) (err error) {
+	return t.str2time(attr.Value)
+}
 
 // NmapRun is contains all the data for a single nmap scan.
 type NmapRun struct {
 	Scanner          string    `xml:"scanner,attr" json:"scanner"`
 	Args             string    `xml:"args,attr" json:"args"`
-	Start            string    `xml:"start,attr" json:"start"`
+	Start            Timestamp `xml:"start,attr" json:"start"`
 	StartStr         string    `xml:"startstr,attr" json:"startstr"`
 	Version          string    `xml:"version,attr" json:"version"`
 	ProfileName      string    `xml:"profile_name,attr" json:"profile_name"`
@@ -27,19 +65,19 @@ type NmapRun struct {
 type ScanInfo struct {
 	Type        string `xml:"type,attr" json:"type"`
 	Protocol    string `xml:"protocol,attr" json:"protocol"`
-	NumServices string `xml:"numservices,attr" json:"numservices"`
+	NumServices int    `xml:"numservices,attr" json:"numservices"`
 	Services    string `xml:"services,attr" json:"services"`
 	ScanFlags   string `xml:"scanflags,attr" json:"scanflags"`
 }
 
 // Verbose contains the verbosity level for the Nmap scan.
 type Verbose struct {
-	Level string `xml:"level,attr" json:"level"`
+	Level int `xml:"level,attr" json:"level"`
 }
 
 // Debugging contains the debugging level for the Nmap scan.
 type Debugging struct {
-	Level string `xml:"level,attr" json:"level"`
+	Level int `xml:"level,attr" json:"level"`
 }
 
 // Target is found in the Nmap xml spec. I have no idea what it
@@ -52,8 +90,8 @@ type Target struct {
 
 // Host contains all information about a single host.
 type Host struct {
-	StartTime    string       `xml:"starttime,attr" json:"starttime"`
-	EndTime      string       `xml:"endtime,attr" json:"endtime"`
+	StartTime    Timestamp    `xml:"starttime,attr" json:"starttime"`
+	EndTime      Timestamp    `xml:"endtime,attr" json:"endtime"`
 	Comment      string       `xml:"comment,attr" json:"comment"`
 	Status       Status       `xml:"status" json:"status"`
 	Addresses    []Address    `xml:"address" json:"addresses"`
@@ -62,7 +100,7 @@ type Host struct {
 	Ports        []Port       `xml:"ports>port" json:"ports"`
 	Os           Os           `xml:"os" json:"os"`
 	Distance     Distance     `xml:"distance" json:"distance"`
-	Uptime       Uptime       `xml:"updtime" json:"updtime"`
+	Uptime       Uptime       `xml:"uptime" json:"uptime"`
 	TcpSequence  TcpSequence  `xml:"tcpsequence" json:"tcpsequence"`
 	IPIdSequence IPIdSequence `xml:"ipidsequence" json:"ipidsequence"`
 	Trace        Trace        `xml:"trace" json:"trace"`
@@ -70,9 +108,9 @@ type Host struct {
 
 // Status is the host's status. Up, down, etc.
 type Status struct {
-	State     string `xml:"state,attr" json:"state"`
-	Reason    string `xml:"reason,attr" json:"reason"`
-	ReasonTTL string `xml:"reason_ttl,attr" json:"reason_ttl"`
+	State     string  `xml:"state,attr" json:"state"`
+	Reason    string  `xml:"reason,attr" json:"reason"`
+	ReasonTTL float32 `xml:"reason_ttl,attr" json:"reason_ttl"`
 }
 
 // Address contains a IPv4 or IPv6 address for a Host.
@@ -107,10 +145,10 @@ type Port struct {
 // State contains information about a given ports
 // status. State will be open, closed, etc.
 type State struct {
-	State     string `xml:"state,attr" json:"state"`
-	Reason    string `xml:"reason,attr" json:"reason"`
-	ReasonTTL string `xml:"reason_ttl,attr" json:"reason_ttl"`
-	ReasonIP  string `xml:"reason_ip,attr" json:"reason_ip"`
+	State     string  `xml:"state,attr" json:"state"`
+	Reason    string  `xml:"reason,attr" json:"reason"`
+	ReasonTTL float32 `xml:"reason_ttl,attr" json:"reason_ttl"`
+	ReasonIP  string  `xml:"reason_ip,attr" json:"reason_ip"`
 }
 
 // Owner contains the name of Port.Owner.
@@ -122,7 +160,7 @@ type Owner struct {
 // service details.
 type Service struct {
 	Name       string `xml:"name,attr" json:"name"`
-	Conf       string `xml:"conf,attr" json:"conf"`
+	Conf       int    `xml:"conf,attr" json:"conf"`
 	Method     string `xml:"method,attr" json:"method"`
 	Version    string `xml:"version,attr" json:"version"`
 	Product    string `xml:"product,attr" json:"product"`
@@ -182,18 +220,18 @@ type OsFingerprint struct {
 
 // Distance is the amount of hops to a particular host.
 type Distance struct {
-	Value string `xml:"value,attr" json:"value"`
+	Value int `xml:"value,attr" json:"value"`
 }
 
 // Uptime is the amount of time the host has been up.
 type Uptime struct {
-	Seconds  string `xml:"seconds,attr" json:"seconds"`
+	Seconds  int    `xml:"seconds,attr" json:"seconds"`
 	Lastboot string `xml:"lastboot,attr" json:"lastboot"`
 }
 
 // TcpSequence contains information regarding the detected tcp sequence.
 type TcpSequence struct {
-	Index      string `xml:"index,attr" json:"index"`
+	Index      int    `xml:"index,attr" json:"index"`
 	Difficulty string `xml:"difficulty,attr" json:"difficulty"`
 	Values     string `xml:"vaules,attr" json:"vaules"`
 }
@@ -218,10 +256,10 @@ type Trace struct {
 
 // Hop is a ip hop to a Host.
 type Hop struct {
-	TTL    string `xml:"ttl,attr" json:"ttl"`
-	Rtt    string `xml:"rtt,attr" json:"rtt"`
-	IPAddr string `xml:"ipaddr,attr" json:"ipaddr"`
-	Host   string `xml:"host,attr" json:"host"`
+	TTL    float32 `xml:"ttl,attr" json:"ttl"`
+	Rtt    float32 `xml:"rtt,attr" json:"rtt"`
+	IPAddr string  `xml:"ipaddr,attr" json:"ipaddr"`
+	Host   string  `xml:"host,attr" json:"host"`
 }
 
 // RunStats contains statistics for a
@@ -234,19 +272,19 @@ type RunStats struct {
 // Finished contains detailed statistics regarding
 // a finished Nmap scan.
 type Finished struct {
-	Time     string `xml:"time,attr" json:"time"`
-	TimeStr  string `xml:"timestr,attr" json:"timestr"`
-	Elapsed  string `xml:"elapsed,attr" json:"elapsed"`
-	Summary  string `xml:"summary,attr" json:"summary"`
-	Exit     string `xml:"exit,attr" json:"exit"`
-	ErrorMsg string `xml:"errormsg,attr" json:"errormsg"`
+	Time     Timestamp `xml:"time,attr" json:"time"`
+	TimeStr  string    `xml:"timestr,attr" json:"timestr"`
+	Elapsed  float32   `xml:"elapsed,attr" json:"elapsed"`
+	Summary  string    `xml:"summary,attr" json:"summary"`
+	Exit     string    `xml:"exit,attr" json:"exit"`
+	ErrorMsg string    `xml:"errormsg,attr" json:"errormsg"`
 }
 
 // Stats contains the amount of up and down hosts and the total count.
 type Stats struct {
-	Up    string `xml:"up,attr" json:"up"`
-	Down  string `xml:"down,attr" json:"down"`
-	Total string `xml:"total,attr" json:"total"`
+	Up    int `xml:"up,attr" json:"up"`
+	Down  int `xml:"down,attr" json:"down"`
+	Total int `xml:"total,attr" json:"total"`
 }
 
 // Parse takes a byte array of nmap xml data and unmarshals it into an
