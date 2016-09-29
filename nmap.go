@@ -45,19 +45,22 @@ func (t *Timestamp) UnmarshalXMLAttr(attr xml.Attr) (err error) {
 
 // NmapRun is contains all the data for a single nmap scan.
 type NmapRun struct {
-	Scanner          string    `xml:"scanner,attr" json:"scanner"`
-	Args             string    `xml:"args,attr" json:"args"`
-	Start            Timestamp `xml:"start,attr" json:"start"`
-	StartStr         string    `xml:"startstr,attr" json:"startstr"`
-	Version          string    `xml:"version,attr" json:"version"`
-	ProfileName      string    `xml:"profile_name,attr" json:"profile_name"`
-	XMLOutputVersion string    `xml:"xmloutputversion,attr" json:"xmloutputversion"`
-	ScanInfo         ScanInfo  `xml:"scaninfo" json:"scaninfo"`
-	Verbose          Verbose   `xml:"verbose" json:"verbose"`
-	Debugging        Debugging `xml:"debugging" json:"debugging"`
-	Hosts            []Host    `xml:"host" json:"hosts"`
-	Targets          []Target  `xml:"target" json:"targets"`
-	RunStats         RunStats  `xml:"runstats" json:"runstats"`
+	Scanner          string         `xml:"scanner,attr" json:"scanner"`
+	Args             string         `xml:"args,attr" json:"args"`
+	Start            Timestamp      `xml:"start,attr" json:"start"`
+	StartStr         string         `xml:"startstr,attr" json:"startstr"`
+	Version          string         `xml:"version,attr" json:"version"`
+	ProfileName      string         `xml:"profile_name,attr" json:"profile_name"`
+	XMLOutputVersion string         `xml:"xmloutputversion,attr" json:"xmloutputversion"`
+	ScanInfo         ScanInfo       `xml:"scaninfo" json:"scaninfo"`
+	Verbose          Verbose        `xml:"verbose" json:"verbose"`
+	Debugging        Debugging      `xml:"debugging" json:"debugging"`
+	TaskBegin        []Task         `xml:"taskbegin" json:"taskbegin"`
+	TaskProgress     []TaskProgress `xml:"taskprogress" json:"taskprogress"`
+	TaskEnd          []Task         `xml:"taskend" json:"taskend"`
+	Hosts            []Host         `xml:"host" json:"hosts"`
+	Targets          []Target       `xml:"target" json:"targets"`
+	RunStats         RunStats       `xml:"runstats" json:"runstats"`
 }
 
 // ScanInfo contains informational regarding how the scan
@@ -78,6 +81,22 @@ type Verbose struct {
 // Debugging contains the debugging level for the Nmap scan.
 type Debugging struct {
 	Level int `xml:"level,attr" json:"level"`
+}
+
+// Task contains information about started and stopped Nmap tasks.
+type Task struct {
+	Task      string    `xml:"task,attr" json:"task"`
+	Time      Timestamp `xml:"time,attr" json:"time"`
+	ExtraInfo string    `xml:"extrainfo,attr" json:"extrainfo"`
+}
+
+// TaskProgress contains information about the progression of a Task.
+type TaskProgress struct {
+	Task      string    `xml:"task,attr" json:"task"`
+	Time      Timestamp `xml:"time,attr" json:"time"`
+	Percent   float32   `xml:"percent,attr" json:"percent"`
+	Remaining int       `xml:"remaining,attr" json:"remaining"`
+	Etc       Timestamp `xml:"etc,attr" json:"etc"`
 }
 
 // Target is found in the Nmap xml spec. I have no idea what it
