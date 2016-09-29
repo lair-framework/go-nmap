@@ -58,6 +58,8 @@ type NmapRun struct {
 	TaskBegin        []Task         `xml:"taskbegin" json:"taskbegin"`
 	TaskProgress     []TaskProgress `xml:"taskprogress" json:"taskprogress"`
 	TaskEnd          []Task         `xml:"taskend" json:"taskend"`
+	PreScripts       []Script       `xml:"prescript>script" json:"prescripts"`
+	PostScripts      []Script       `xml:"postscript>script" json:"postscripts"`
 	Hosts            []Host         `xml:"host" json:"hosts"`
 	Targets          []Target       `xml:"target" json:"targets"`
 	RunStats         RunStats       `xml:"runstats" json:"runstats"`
@@ -109,20 +111,23 @@ type Target struct {
 
 // Host contains all information about a single host.
 type Host struct {
-	StartTime    Timestamp    `xml:"starttime,attr" json:"starttime"`
-	EndTime      Timestamp    `xml:"endtime,attr" json:"endtime"`
-	Comment      string       `xml:"comment,attr" json:"comment"`
-	Status       Status       `xml:"status" json:"status"`
-	Addresses    []Address    `xml:"address" json:"addresses"`
-	Hostnames    []Hostname   `xml:"hostnames>hostname" json:"hostnames"`
-	Smurf        []Smurf      `xml:"smurf" json:"smurf"`
-	Ports        []Port       `xml:"ports>port" json:"ports"`
-	Os           Os           `xml:"os" json:"os"`
-	Distance     Distance     `xml:"distance" json:"distance"`
-	Uptime       Uptime       `xml:"uptime" json:"uptime"`
-	TcpSequence  TcpSequence  `xml:"tcpsequence" json:"tcpsequence"`
-	IPIdSequence IPIdSequence `xml:"ipidsequence" json:"ipidsequence"`
-	Trace        Trace        `xml:"trace" json:"trace"`
+	StartTime     Timestamp     `xml:"starttime,attr" json:"starttime"`
+	EndTime       Timestamp     `xml:"endtime,attr" json:"endtime"`
+	Comment       string        `xml:"comment,attr" json:"comment"`
+	Status        Status        `xml:"status" json:"status"`
+	Addresses     []Address     `xml:"address" json:"addresses"`
+	Hostnames     []Hostname    `xml:"hostnames>hostname" json:"hostnames"`
+	Smurfs        []Smurf       `xml:"smurf" json:"smurfs"`
+	Ports         []Port        `xml:"ports>port" json:"ports"`
+	ExtraPorts    []ExtraPorts  `xml:"ports>extraports" json:"extraports"`
+	Os            Os            `xml:"os" json:"os"`
+	Distance      Distance      `xml:"distance" json:"distance"`
+	Uptime        Uptime        `xml:"uptime" json:"uptime"`
+	TcpSequence   TcpSequence   `xml:"tcpsequence" json:"tcpsequence"`
+	IpIdSequence  IpIdSequence  `xml:"ipidsequence" json:"ipidsequence"`
+	TcpTsSequence TcpTsSequence `xml:"tcptssequence" json:"tcptssequence"`
+	HostScripts   []Script      `xml:"hostscript>script" json:"hostscripts"`
+	Trace         Trace         `xml:"trace" json:"trace"`
 }
 
 // Status is the host's status. Up, down, etc.
@@ -151,10 +156,21 @@ type Smurf struct {
 	Responses string `xml:"responses,attr" json:"responses"`
 }
 
+// ExtraPorts contains the information about the closed|filtered ports.
+type ExtraPorts struct {
+	State   string   `xml:"state,attr" json:"state"`
+	Count   int      `xml:"count,attr" json:"count"`
+	Reasons []Reason `xml:"extrareasons" json:"reasons"`
+}
+type Reason struct {
+	Reason string `xml:"reason,attr" json:"reason"`
+	Count  int    `xml:"count,attr" json:"count"`
+}
+
 // Port contains all the information about a scanned port.
 type Port struct {
 	Protocol string   `xml:"protocol,attr" json:"protocol"`
-	PortId   int      `xml:"portid,attr" json:"portid"`
+	PortId   int      `xml:"portid,attr" json:"id"`
 	State    State    `xml:"state" json:"state"`
 	Owner    Owner    `xml:"owner" json:"owner"`
 	Service  Service  `xml:"service" json:"service"`
@@ -193,34 +209,39 @@ type Service struct {
 	OsType     string `xml:"ostype,attr" json:"ostype"`
 	DeviceType string `xml:"devicetype,attr" json:"devicetype"`
 	ServiceFp  string `xml:"servicefp,attr" json:"servicefp"`
+	CPEs       []CPE  `xml:"cpe" json:"cpes"`
 }
+
+// CPE (Common Platform Enumeration) is a standardized way to name software
+// applications, operating systems, and hardware platforms.
+type CPE string
 
 // Script contains information from Nmap Scripting Engine.
 type Script struct {
-	Id     string `xml:"id,attr" json:"id"`
-	Output string `xml:"output,attr" json:"output"`
+	Id     string  `xml:"id,attr" json:"id"`
+	Output string  `xml:"output,attr" json:"output"`
+	Tables []Table `xml:"table" json:"tables"`
+}
+
+// Table contains the output of the script in a more parse-able form.
+// ToDo: This should be a map[string][]string
+type Table struct {
+	Key      string   `xml:"key,attr" json:"key"`
+	Elements []string `xml:"elem" json:"elements"`
 }
 
 // Os contains the fingerprinted operating system for a Host.
 type Os struct {
-	PortUsed      []PortUsed      `xml:"portused" json:"portsused"`
-	OsMatch       []OsMatch       `xml:"osmatch" json:"osmatches"`
-	OsFingerprint []OsFingerprint `xml:"osfingerprint" json:"osfingerprints"`
+	PortsUsed      []PortUsed      `xml:"portused" json:"portsused"`
+	OsMatches      []OsMatch       `xml:"osmatch" json:"osmatches"`
+	OsFingerprints []OsFingerprint `xml:"osfingerprint" json:"osfingerprints"`
 }
 
-// PortUsed is the port used to fingerprint a Os.
+// PortsUsed is the port used to fingerprint a Os.
 type PortUsed struct {
 	State  string `xml:"state,attr" json:"state"`
 	Proto  string `xml:"proto,attr" json:"proto"`
-	PortId string `xml:"portid,attr" json:"portid"`
-}
-
-// OsMatch contains detailed information regarding a Os fingerprint.
-type OsMatch struct {
-	Name     string    `xml:"name,attr" json:"name"`
-	Accuracy string    `xml:"accuracy,attr" json:"accuracy"`
-	Line     string    `xml:"line,attr" json:"line"`
-	OsClass  []OsClass `xml:"osclass" json:"osclasses"`
+	PortId int    `xml:"portid,attr" json:"portid"`
 }
 
 // OsClass contains vendor information for an Os.
@@ -230,6 +251,15 @@ type OsClass struct {
 	Type     string `xml:"type,attr" json:"type"`
 	Accuracy string `xml:"accurancy,attr" json:"accurancy"`
 	OsFamily string `xml:"osfamily,attr" json:"osfamily"`
+	CPEs     []CPE  `xml:"cpe" json:"cpes"`
+}
+
+// OsMatch contains detailed information regarding a Os fingerprint.
+type OsMatch struct {
+	Name      string    `xml:"name,attr" json:"name"`
+	Accuracy  string    `xml:"accuracy,attr" json:"accuracy"`
+	Line      string    `xml:"line,attr" json:"line"`
+	OsClasses []OsClass `xml:"osclass" json:"osclasses"`
 }
 
 // OsFingerprint is the actual fingerprint string.
@@ -255,37 +285,41 @@ type TcpSequence struct {
 	Values     string `xml:"vaules,attr" json:"vaules"`
 }
 
-// IPIdSequence contains information regarding the detected ip sequence.
-type IPIdSequence struct {
+// Sequence contains information regarding the detected X sequence.
+type Sequence struct {
 	Class  string `xml:"class,attr" json:"class"`
 	Values string `xml:"values,attr" json:"values"`
 }
-
-// Times contains time statistics for an Nmap scan.
-type Times struct {
-	Srtt   string `xml:"srtt,attr" json:"srtt"`
-	Rttvar string `xml:"rttvar,attr" json:"rttvar"`
-	To     string `xml:"to,attr" json:"to"`
-}
+type IpIdSequence Sequence
+type TcpTsSequence Sequence
 
 // Trace contains the hops to a Host.
 type Trace struct {
-	Hops []Hop `xml:"hop" json:"hops"`
+	Proto string `xml:"proto,attr" json:"proto"`
+	Port  int    `xml:"port,attr" json:"port"`
+	Hops  []Hop  `xml:"hop" json:"hops"`
 }
 
 // Hop is a ip hop to a Host.
 type Hop struct {
 	TTL    float32 `xml:"ttl,attr" json:"ttl"`
-	Rtt    float32 `xml:"rtt,attr" json:"rtt"`
+	RTT    float32 `xml:"rtt,attr" json:"rtt"`
 	IPAddr string  `xml:"ipaddr,attr" json:"ipaddr"`
 	Host   string  `xml:"host,attr" json:"host"`
+}
+
+// Times contains time statistics for an Nmap scan.
+type Times struct {
+	SRTT string `xml:"srtt,attr" json:"srtt"`
+	RTT  string `xml:"rttvar,attr" json:"rttv"`
+	To   string `xml:"to,attr" json:"to"`
 }
 
 // RunStats contains statistics for a
 // finished Nmap scan.
 type RunStats struct {
-	Finished Finished `xml:"finished" json:"finished"`
-	Hosts    Stats    `xml:"hosts" json:"hosts"`
+	Finished Finished  `xml:"finished" json:"finished"`
+	Hosts    HostStats `xml:"hosts" json:"hosts"`
 }
 
 // Finished contains detailed statistics regarding
@@ -299,8 +333,8 @@ type Finished struct {
 	ErrorMsg string    `xml:"errormsg,attr" json:"errormsg"`
 }
 
-// Stats contains the amount of up and down hosts and the total count.
-type Stats struct {
+// HostStats contains the amount of up and down hosts and the total count.
+type HostStats struct {
 	Up    int `xml:"up,attr" json:"up"`
 	Down  int `xml:"down,attr" json:"down"`
 	Total int `xml:"total,attr" json:"total"`
