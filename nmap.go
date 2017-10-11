@@ -11,18 +11,19 @@ import (
 type Timestamp time.Time
 
 // str2time converts a string containing a UNIX timestamp to to a time.Time.
-func (t Timestamp) str2time(s string) (err error) {
-	ts, err := strconv.Atoi(string(s))
+func (t *Timestamp) str2time(s string) (err error) {
+	ts, err := strconv.Atoi(s)
 	if err != nil {
 		return
 	}
-	t = Timestamp(time.Unix(int64(ts), 0))
+	*t = Timestamp(time.Unix(int64(ts), 0))
 	return
 }
 
 // time2str formats the time.Time value as a UNIX timestamp string.
+// XXX these might also need to be changed to pointers. See str2time and UnmarshalXMLAttr.
 func (t Timestamp) time2str() string {
-	return fmt.Sprint(time.Time(t).Unix())
+	return fmt.Sprint(time.Time(t))
 }
 
 func (t Timestamp) MarshalJSON() ([]byte, error) {
@@ -33,11 +34,11 @@ func (t Timestamp) UnmarshalJSON(b []byte) error {
 	return t.str2time(string(b))
 }
 
-func (t Timestamp) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
+func (t *Timestamp) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
 	return xml.Attr{Name: name, Value: t.time2str()}, nil
 }
 
-func (t Timestamp) UnmarshalXMLAttr(attr xml.Attr) (err error) {
+func (t *Timestamp) UnmarshalXMLAttr(attr xml.Attr) (err error) {
 	return t.str2time(attr.Value)
 }
 
@@ -344,8 +345,5 @@ type HostStats struct {
 func Parse(content []byte) (*NmapRun, error) {
 	r := &NmapRun{}
 	err := xml.Unmarshal(content, r)
-	if err != nil {
-		return r, err
-	}
-	return r, nil
+	return r, err
 }
