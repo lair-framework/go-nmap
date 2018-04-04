@@ -27,7 +27,7 @@ func (t Timestamp) time2str() string {
 }
 
 func (t Timestamp) MarshalJSON() ([]byte, error) {
-	return []byte(t.time2str()), nil
+	return []byte(fmt.Sprintf("\"%s\"", t.time2str())), nil
 }
 
 func (t Timestamp) UnmarshalJSON(b []byte) error {
