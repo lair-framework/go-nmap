@@ -127,6 +127,7 @@ type Host struct {
 	TcpTsSequence TcpTsSequence `xml:"tcptssequence" json:"tcptssequence"`
 	HostScripts   []Script      `xml:"hostscript>script" json:"hostscripts"`
 	Trace         Trace         `xml:"trace" json:"trace"`
+	Times         Times         `xml:"times" json:"times"`
 }
 
 // Status is the host's status. Up, down, etc.
