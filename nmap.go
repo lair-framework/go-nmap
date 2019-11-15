@@ -218,9 +218,10 @@ type CPE string
 
 // Script contains information from Nmap Scripting Engine.
 type Script struct {
-	Id     string  `xml:"id,attr" json:"id"`
-	Output string  `xml:"output,attr" json:"output"`
-	Tables []Table `xml:"table" json:"tables"`
+	Id       string    `xml:"id,attr" json:"id"`
+	Output   string    `xml:"output,attr" json:"output"`
+	Tables   []Table   `xml:"table" json:"tables"`
+	Elements []Element `xml:"elem" json:"elements"`
 }
 
 // Table contains the output of the script in a more parse-able form.
