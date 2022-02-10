@@ -112,6 +112,7 @@ type Target struct {
 type Host struct {
 	StartTime     Timestamp     `xml:"starttime,attr" json:"starttime"`
 	EndTime       Timestamp     `xml:"endtime,attr" json:"endtime"`
+	TimedOut      bool          `xml:"timedout,attr" json:"timedout"`
 	Comment       string        `xml:"comment,attr" json:"comment"`
 	Status        Status        `xml:"status" json:"status"`
 	Addresses     []Address     `xml:"address" json:"addresses"`
