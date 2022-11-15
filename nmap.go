@@ -353,6 +353,14 @@ type HostStats struct {
 // to check and cast them to the proper type.
 func Parse(content []byte) (*NmapRun, error) {
 	r := &NmapRun{}
-	err := xml.Unmarshal(content, r)
+	
+	//In case of encoding="iso-8859-1" in xml file (XML export in Zenmap), Unmarshal raises an error.
+	//err := xml.Unmarshal(content, r)
+	
+	decoder := xml.NewDecoder(bytes.NewReader(content))
+	if strings.Contains(string(content), "encoding=\"iso-8859-1\"") {
+		decoder.CharsetReader = charset.NewReaderLabel
+	}
+	err := decoder.Decode(r)
 	return r, err
 }
